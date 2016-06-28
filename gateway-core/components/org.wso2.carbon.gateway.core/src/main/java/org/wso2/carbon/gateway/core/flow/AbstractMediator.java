@@ -20,7 +20,9 @@ package org.wso2.carbon.gateway.core.flow;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.wso2.carbon.gateway.core.Constants;
 import org.wso2.carbon.gateway.core.config.ParameterHolder;
+import org.wso2.carbon.gateway.core.debug.GatewayDebugManager;
 import org.wso2.carbon.gateway.core.flow.contentaware.ConversionManager;
 import org.wso2.carbon.gateway.core.util.VariableUtil;
 import org.wso2.carbon.messaging.CarbonCallback;
@@ -33,7 +35,8 @@ public abstract class AbstractMediator implements Mediator {
 
     private static final Logger log = LoggerFactory.getLogger(AbstractMediator.class);
 
-
+    boolean isBreakPoint;
+    boolean isSkipPoint;
     /* Pointer for the next sibling in the pipeline*/
     Mediator nextMediator = null;
 
@@ -119,4 +122,32 @@ public abstract class AbstractMediator implements Mediator {
         }
     }
 
+    public boolean isSkipPoint() {
+        return isSkipPoint;
+    }
+
+    public void setSkipPoint(boolean isSkipPoint) {
+        this.isSkipPoint = isSkipPoint;
+    }
+
+    public boolean isBreakPoint() {
+        return isBreakPoint;
+    }
+
+    public void setBreakPoint(boolean isBreakPoint) {
+        this.isBreakPoint = isBreakPoint;
+    }
+
+    public boolean divertMediationRoute(CarbonMessage carbonMessage) {
+        if (carbonMessage.getProperty(Constants.GATEWAY_DEBUG_MANAGER) != null) {
+            GatewayDebugManager gatewayDebugManager = (GatewayDebugManager)carbonMessage.getProperty(Constants.GATEWAY_DEBUG_MANAGER);
+            if (isSkipPoint()) {
+                gatewayDebugManager.advertiseMediationFlowSkip(carbonMessage);
+                return true;
+            } else if (isBreakPoint()) {
+                gatewayDebugManager.publishMediationFlowBreakPoint(carbonMessage);
+            }
+        }
+        return false;
+    }
 }

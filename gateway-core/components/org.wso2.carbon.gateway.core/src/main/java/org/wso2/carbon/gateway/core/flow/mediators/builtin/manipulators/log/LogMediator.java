@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
 import org.wso2.carbon.gateway.core.Constants;
 import org.wso2.carbon.gateway.core.config.Parameter;
 import org.wso2.carbon.gateway.core.config.ParameterHolder;
+import org.wso2.carbon.gateway.core.debug.GatewayDebugManager;
 import org.wso2.carbon.gateway.core.flow.AbstractMediator;
 import org.wso2.carbon.gateway.core.flow.contentaware.MIMEType;
 import org.wso2.carbon.gateway.core.flow.contentaware.messagereaders.Reader;
@@ -105,6 +106,11 @@ public class LogMediator extends AbstractMediator {
 
     @Override
     public boolean receive(CarbonMessage carbonMessage, CarbonCallback carbonCallback) throws Exception {
+        if (carbonMessage.isDebugEnabled()) {
+            if (super.divertMediationRoute(carbonMessage)) {
+                return next(carbonMessage, carbonCallback);
+            }
+        }
         boolean trace = category == 2 ? true : false;
         MediatorLog mediatorLog = new MediatorLog(log, trace, carbonMessage);
         Reader reader = null;
@@ -142,6 +148,7 @@ public class LogMediator extends AbstractMediator {
         default:
             break;
         }
+
         return next(carbonMessage, carbonCallback);
     }
 

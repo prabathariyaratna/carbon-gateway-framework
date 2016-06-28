@@ -240,6 +240,45 @@
                 <artifactId>commons-io</artifactId>
                 <version>${commons.io.version}</version>
             </dependency>
+
+            <!-- Netty Dependency -->
+
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-common</artifactId>
+                <version>${netty.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-buffer</artifactId>
+                <version>${netty.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-transport</artifactId>
+                <version>${netty.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-handler</artifactId>
+                <version>${netty.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-codec</artifactId>
+                <version>${netty.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-codec-http</artifactId>
+                <version>${netty.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.codehaus.jettison.wso2</groupId>
+                <artifactId>jettison</artifactId>
+                <version>${jettison.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -257,6 +296,7 @@
                         </findbugsXmlOutputDirectory>
                         <excludeFilterFile>${maven.findbugsplugin.version.exclude}</excludeFilterFile>
                         <!--Exclude generated sources-->
+                          <skip>true</skip>
                     </configuration>
                     <version>${maven.findbugsplugin.version}</version>
                     <executions>
@@ -266,6 +306,9 @@
                             <goals>
                                 <goal>check</goal>
                             </goals>
+
+                  
+
                         </execution>
                     </executions>
                 </plugin>
@@ -289,6 +332,7 @@
                                 <includeTestSourceDirectory>true</includeTestSourceDirectory>
                                 <!--Exclude generated sources-->
                                 <excludes>**/generated/**/*</excludes>
+                                <skip>true</skip>
                             </configuration>
                             <goals>
                                 <goal>check</goal>
@@ -373,8 +417,10 @@
         <net.minidev.version>2.2</net.minidev.version>
         <carbon.deployment.version>5.0.0</carbon.deployment.version>
         <carbon.deployment.export.version>5.0.0</carbon.deployment.export.version>
-
+        <netty.version>4.0.30.Final</netty.version>
+        <netty.package.import.version.range>[4.0.30, 5.0.0)</netty.package.import.version.range>
         <commons.io.version>2.0</commons.io.version>
+        <jettison.version>1.1.wso2v1</jettison.version>
     </properties>
 
     <modules>

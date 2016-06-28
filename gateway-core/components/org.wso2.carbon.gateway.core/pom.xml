@@ -99,6 +99,35 @@
             <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-buffer</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-transport</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-handler</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-codec</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-codec-http</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.jettison.wso2</groupId>
+            <artifactId>jettison</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -130,7 +159,14 @@
             javax.xml.*;version=0.0.0,
             org.jaxen.*;version="${jaxen.version}",
             org.wso2.carbon.messaging.*;version="${carbon.messaging.package.import.version.range}",
-            org.wso2.carbon.deployment.engine.*;version="${carbon.deployment.export.version}"
+            org.wso2.carbon.deployment.engine.*;version="${carbon.deployment.export.version}",
+            io.netty.buffer.*;version="${netty.package.import.version.range}",
+            io.netty.handler.codec.*;version="${netty.package.import.version.range}",
+            io.netty.util.*;version="${netty.package.import.version.range}",
+            io.netty.handler.*;version="${netty.package.import.version.range}",
+            io.netty.bootstrap.*;version="${netty.package.import.version.range}",
+            io.netty.channel.*;version="${netty.package.import.version.range}",
+            org.codehaus.jettison.json.*,
         </import.package>
         <carbon.component>
             startup.listener;componentName="mediator-provider";

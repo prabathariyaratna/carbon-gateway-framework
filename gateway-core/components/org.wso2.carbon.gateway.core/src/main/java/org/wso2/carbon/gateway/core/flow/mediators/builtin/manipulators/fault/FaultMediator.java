@@ -52,6 +52,11 @@ public class FaultMediator extends AbstractMediator {
     @Override
     public boolean receive(CarbonMessage carbonMessage, CarbonCallback carbonCallback)
             throws Exception {
+        if (carbonMessage.isDebugEnabled()) {
+            if (super.divertMediationRoute(carbonMessage)) {
+                return next(carbonMessage, carbonCallback);
+            }
+        }
         Throwable throwable = (Throwable) carbonMessage.getProperty(Constants.ERROR_EXCEPTION);
         String className = throwable.getClass().getName();
         ErrorDetail errorDetail = stringErrorDetailMap.get(className);

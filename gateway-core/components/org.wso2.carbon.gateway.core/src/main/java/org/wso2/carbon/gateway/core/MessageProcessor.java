@@ -20,6 +20,7 @@ package org.wso2.carbon.gateway.core;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.wso2.carbon.gateway.core.debug.GatewayDebugManager;
 import org.wso2.carbon.gateway.core.inbound.Dispatcher;
 import org.wso2.carbon.gateway.core.inbound.InboundEPProviderRegistry;
 import org.wso2.carbon.gateway.core.inbound.Provider;
@@ -38,6 +39,7 @@ import java.util.Stack;
 public class MessageProcessor implements CarbonMessageProcessor {
 
     private static final Logger log = LoggerFactory.getLogger(MessageProcessor.class);
+    private GatewayDebugManager gatewayDebugManager;
 
     @Override
     public boolean receive(CarbonMessage cMsg, CarbonCallback callback) throws Exception {
@@ -64,6 +66,10 @@ public class MessageProcessor implements CarbonMessageProcessor {
             return false;
         }
 
+        if(gatewayDebugManager != null) {
+            cMsg.setProperty(Constants.GATEWAY_DEBUG_MANAGER, gatewayDebugManager);
+            cMsg.setDebugEnabled(true);
+        }
         dispatcher.dispatch(cMsg, callback);
         return false;
     }
@@ -76,5 +82,9 @@ public class MessageProcessor implements CarbonMessageProcessor {
     @Override
     public String getId() {
         return null;
+    }
+
+    public void setGatewayDebugManager(GatewayDebugManager gatewayDebugManager) {
+        this.gatewayDebugManager = gatewayDebugManager;
     }
 }

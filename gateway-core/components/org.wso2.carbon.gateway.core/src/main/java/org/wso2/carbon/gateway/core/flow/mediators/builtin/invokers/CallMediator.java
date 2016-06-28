@@ -66,6 +66,12 @@ public class CallMediator extends AbstractMediator implements Invoker {
     public boolean receive(CarbonMessage carbonMessage, CarbonCallback carbonCallback)
             throws Exception {
 
+        if (carbonMessage.isDebugEnabled()) {
+            if (super.divertMediationRoute(carbonMessage)) {
+                return next(carbonMessage, carbonCallback);
+            }
+        }
+
         OutboundEndpoint endpoint = outboundEndpoint;
         if (endpoint == null) {
             endpoint = ConfigRegistry.getInstance().getOutboundEndpoint(outboundEPKey);

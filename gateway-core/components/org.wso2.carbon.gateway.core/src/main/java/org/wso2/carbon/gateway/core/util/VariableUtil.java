@@ -120,6 +120,16 @@ public class VariableUtil {
     }
 
     /**
+     * Remove a variable from the top most variable stack.
+     * @param cMsg
+     * @param key
+     */
+    public static void removeVariable(CarbonMessage cMsg, String key) {
+        Stack<Map<String, Object>> stack = getVariableStack(cMsg);
+        stack.peek().remove(key);
+    }
+
+    /**
      * Add a variable onto the global constants stack.
      * @param cMsg
      * @param key

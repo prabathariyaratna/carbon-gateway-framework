@@ -61,6 +61,11 @@ public class PropertyMediator extends AbstractMediator {
     @Override
     public boolean receive(CarbonMessage carbonMessage, CarbonCallback carbonCallback) throws Exception {
 
+        if (carbonMessage.isDebugEnabled()) {
+            if (super.divertMediationRoute(carbonMessage)) {
+                return next(carbonMessage, carbonCallback);
+            }
+        }
         if (carbonMessage.getProperty(Constants.VARIABLE_STACK) != null) {
             Stack<Map<String, Object>> variableStack =
                     (Stack<Map<String, Object>>) carbonMessage.getProperty(Constants.VARIABLE_STACK);

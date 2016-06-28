@@ -17,9 +17,11 @@
  */
 package org.wso2.carbon.gateway.core.inbound;
 
+import org.wso2.carbon.gateway.core.Constants;
 import org.wso2.carbon.gateway.core.config.ConfigRegistry;
 import org.wso2.carbon.gateway.core.config.GWConfigHolder;
 import org.wso2.carbon.gateway.core.config.ParameterHolder;
+import org.wso2.carbon.gateway.core.debug.GatewayDebugManager;
 import org.wso2.carbon.gateway.core.flow.Group;
 import org.wso2.carbon.gateway.core.util.VariableUtil;
 import org.wso2.carbon.messaging.CarbonCallback;
@@ -78,7 +80,11 @@ public abstract class InboundEndpoint {
      * @return whether forward processing is successful
      */
     public boolean receive(CarbonMessage cMsg, CarbonCallback callback) {
-
+        if (cMsg.isDebugEnabled()) {
+            GatewayDebugManager debugManager = (GatewayDebugManager) cMsg.getProperty(Constants.GATEWAY_DEBUG_MANAGER);
+            debugManager.acquireMediationFlowLock();
+            debugManager.publishMediationFlowStartPoint(cMsg);
+        }
         GWConfigHolder configHolder = ConfigRegistry.getInstance().getGWConfig(getGWConfigName());
         VariableUtil.pushGlobalVariableStack(cMsg, configHolder.getGlobalConstants());
 
@@ -96,7 +102,15 @@ public abstract class InboundEndpoint {
             }
         }
 
-        return ConfigRegistry.getInstance().getPipeline(pipelineName).receive(cMsg, callback);
+        boolean status = ConfigRegistry.getInstance().getPipeline(pipelineName).receive(cMsg, callback);
+
+        if (cMsg.isDebugEnabled()) {
+            GatewayDebugManager debugManager = (GatewayDebugManager) cMsg.getProperty(Constants.GATEWAY_DEBUG_MANAGER);
+            debugManager.publishMediationFlowTerminatePoint(cMsg);
+            debugManager.releaseMediationFlowLock();
+        }
+
+        return status;
     }
 
     public abstract String getProtocol();

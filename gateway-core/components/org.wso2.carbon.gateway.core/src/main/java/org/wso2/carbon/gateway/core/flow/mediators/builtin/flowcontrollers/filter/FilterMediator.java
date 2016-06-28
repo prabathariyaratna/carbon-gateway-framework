@@ -88,6 +88,11 @@ public class FilterMediator extends AbstractFlowController {
     public boolean receive(CarbonMessage carbonMessage, CarbonCallback carbonCallback)
                throws Exception {
 
+        if (carbonMessage.isDebugEnabled()) {
+            if (super.divertMediationRoute(carbonMessage)) {
+                return next(carbonMessage, carbonCallback);
+            }
+        }
         super.receive(carbonMessage, carbonCallback);
 
         if (source.getScope().equals(Scope.HEADER)) {

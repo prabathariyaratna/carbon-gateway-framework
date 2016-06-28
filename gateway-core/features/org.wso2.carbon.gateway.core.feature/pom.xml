@@ -83,6 +83,10 @@
             <groupId>jaxen</groupId>
             <artifactId>jaxen</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.codehaus.jettison.wso2</groupId>
+            <artifactId>jettison</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -139,6 +143,10 @@
                                 <bundle>
                                     <symbolicName>org.wso2.carbon.deployment.engine</symbolicName>
                                     <version>${carbon.deployment.version}</version>
+                                </bundle>
+                                <bundle>
+                                    <symbolicName>jettison</symbolicName>
+                                    <version>${jettison.version}</version>
                                 </bundle>
                             </bundles>
                         </configuration>

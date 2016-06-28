@@ -26,8 +26,10 @@ import org.apache.axiom.soap.SOAPHeader;
 import org.apache.axiom.soap.SOAPHeaderBlock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.wso2.carbon.gateway.core.Constants;
 import org.wso2.carbon.gateway.core.config.Parameter;
 import org.wso2.carbon.gateway.core.config.ParameterHolder;
+import org.wso2.carbon.gateway.core.debug.GatewayDebugManager;
 import org.wso2.carbon.gateway.core.flow.AbstractMediator;
 import org.wso2.carbon.gateway.core.flow.contentaware.messagereaders.Reader;
 import org.wso2.carbon.gateway.core.flow.contentaware.messagereaders.ReaderRegistryImpl;
@@ -63,6 +65,11 @@ public class HeaderMediator extends AbstractMediator {
 
     @Override
     public boolean receive(CarbonMessage carbonMessage, CarbonCallback carbonCallback) throws Exception {
+        if (carbonMessage.isDebugEnabled()) {
+            if (super.divertMediationRoute(carbonMessage)) {
+                return next(carbonMessage, carbonCallback);
+            }
+        }
         if (action == Action.REMOVE && scope == Scope.TRANSPORT) {
             carbonMessage.removeHeader(name);
         } else if (action == Action.SET && scope == Scope.TRANSPORT) {
@@ -95,6 +102,7 @@ public class HeaderMediator extends AbstractMediator {
             addCustomHeader(messageDataSource, soapEnvelope);
 
         }
+
         return next(carbonMessage, carbonCallback);
     }
 

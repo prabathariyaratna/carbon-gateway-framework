@@ -38,6 +38,12 @@ public class RespondMediator extends AbstractMediator implements Invoker {
     public boolean receive(CarbonMessage carbonMessage, CarbonCallback carbonCallback)
             throws Exception {
 
+        if (carbonMessage.isDebugEnabled()) {
+            if (super.divertMediationRoute(carbonMessage)) {
+                return next(carbonMessage, carbonCallback);
+            }
+        }
+
         CarbonCallback parentCallback = carbonCallback;
 
         // Traverse and find the top most callback coming from transport level

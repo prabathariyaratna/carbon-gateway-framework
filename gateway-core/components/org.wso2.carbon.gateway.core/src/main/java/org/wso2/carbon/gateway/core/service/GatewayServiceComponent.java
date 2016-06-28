@@ -28,6 +28,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.gateway.core.MessageProcessor;
 import org.wso2.carbon.gateway.core.ServiceContextHolder;
+import org.wso2.carbon.gateway.core.debug.GatewayDebugManager;
+import org.wso2.carbon.gateway.core.debug.GatewayWebSocketListener;
 import org.wso2.carbon.messaging.CarbonMessageProcessor;
 import org.wso2.carbon.messaging.TransportSender;
 
@@ -47,10 +49,15 @@ public class GatewayServiceComponent {
     protected void start(BundleContext bundleContext) {
         try {
             log.info("Starting Gateway...!");
-
             //Creating the processor and registering the service
-            bundleContext.registerService(CarbonMessageProcessor.class, new MessageProcessor(), null);
+            MessageProcessor messageProcessor = new MessageProcessor();
+            bundleContext.registerService(CarbonMessageProcessor.class, messageProcessor, null);
 
+            if(isMediationDebugEnable()) {
+                GatewayDebugManager gatewayDebugManager = new GatewayDebugManager();
+                new GatewayWebSocketListener(gatewayDebugManager).start();
+                messageProcessor.setGatewayDebugManager(gatewayDebugManager);
+            }
         } catch (Exception ex) {
             String msg = "Error while loading Gateway";
             log.error(msg, ex);
@@ -71,6 +78,10 @@ public class GatewayServiceComponent {
 
     protected void removeTransportSender(TransportSender transportSender) {
         ServiceContextHolder.getInstance().removeTransportSender(transportSender);
+    }
+
+    private boolean isMediationDebugEnable() {
+        return Boolean.parseBoolean(System.getProperty("gateway.debug"));
     }
 
 

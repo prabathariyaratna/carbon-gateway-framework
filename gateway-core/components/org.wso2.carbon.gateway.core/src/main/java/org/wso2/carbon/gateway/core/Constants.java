@@ -27,6 +27,8 @@ public class Constants {
 
     public static final String VARIABLE_STACK = "VARIABLE_STACK";
 
+    public static final String GATEWAY_DEBUG_MANAGER = "GATEWAY_DEBUG_MANAGER";
+
     /**
      * Enumeration of supported types.
      */
