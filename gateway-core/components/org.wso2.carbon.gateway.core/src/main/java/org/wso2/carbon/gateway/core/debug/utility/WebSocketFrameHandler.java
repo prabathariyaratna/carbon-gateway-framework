@@ -59,4 +59,10 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<Object> {
         runtimeSuspensionSem.release();
         SharedChannelGroup.getInstance().add(ctx.channel());
     }
+
+    @Override
+    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+        super.channelInactive(ctx);
+        SharedChannelGroup.reset();
+    }
 }

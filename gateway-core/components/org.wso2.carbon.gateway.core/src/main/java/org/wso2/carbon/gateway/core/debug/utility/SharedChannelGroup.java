@@ -58,6 +58,10 @@ public class SharedChannelGroup implements ChannelGroup, ChannelFutureListener {
 
     }
 
+    public static void reset() {
+        instance = null;
+    }
+
     @Override
     public String name() {
         return null;
