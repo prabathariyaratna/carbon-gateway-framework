@@ -234,7 +234,7 @@ public class GatewayDebugManager {
     }
 
 
-    private void getParameterDetails(String commandArguments, JSONObject parameter) {
+    private void getParameterDetails(String commandArgument, JSONObject parameter) {
         if (!(this.medFlowState == MediationFlowState.SUSPENDED)) {
             this.publishCommandResponse(createDebugCommandResponse(false,
                                                                    DebugCommandConstants.DEBUG_COMMAND_RESPONSE_UNABLE_TO_ACQUIRE_MESSAGE_PARAMETERS).toString());
@@ -242,7 +242,7 @@ public class GatewayDebugManager {
         }
 
         try {
-            if (commandArguments.equals(DebugCommandConstants.DEBUG_PARAMETERS)) {
+            if (commandArgument.equals(DebugCommandConstants.DEBUG_PARAMETERS)) {
                 JSONObject result = new JSONObject();
                 result.put(DebugCommandConstants.DEBUG_PARAMETERS, getVariables());
 
@@ -256,11 +256,13 @@ public class GatewayDebugManager {
                             .toString());
                 }
                 SharedChannelGroup.getInstance().writeAndFlush(result);
-            } else if (commandArguments.equals(DebugCommandConstants.DEBUG_PARAMETER)) {
+            } else if (commandArgument.equals(DebugCommandConstants.DEBUG_PARAMETER)) {
                 if (parameter != null) {
                     JSONObject result = new JSONObject();
                     String parameterName = parameter.getString(DebugCommandConstants.DEBUG_PARAMETER_NAME);
-                    result.put(parameterName, carbonMessage.getProperty(parameterName));
+                    if(VariableUtil.getVariable(carbonMessage, parameterName) != null) {
+                        result.put(parameterName, VariableUtil.getVariable(carbonMessage, parameterName).toString());
+                    }
                     SharedChannelGroup.getInstance().writeAndFlush(result);
                 }
             }
