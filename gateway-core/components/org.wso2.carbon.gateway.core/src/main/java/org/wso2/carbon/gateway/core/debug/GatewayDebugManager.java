@@ -216,8 +216,16 @@ public class GatewayDebugManager {
                         ((AbstractMediator) mediators.getMediators().get(Integer.parseInt(mediatorPositions[i])))
                                 .setBreakPoint
                                         (true);
+                        ((AbstractMediator) mediators.getMediators().get(Integer.parseInt(mediatorPositions[i])))
+                                .setPipelineName(pipeLineName);
+                        ((AbstractMediator) mediators.getMediators().get(Integer.parseInt(mediatorPositions[i])))
+                                .setMediatorPosition(Integer.parseInt(mediatorPositions[i]));
                     } else {
                         ((AbstractMediator) mediators.getMediators().get(Integer.parseInt(mediatorPositions[i]))).setBreakPoint(false);
+                        ((AbstractMediator) mediators.getMediators().get(Integer.parseInt(mediatorPositions[i])))
+                                .setPipelineName(null);
+                        ((AbstractMediator) mediators.getMediators().get(Integer.parseInt(mediatorPositions[i])))
+                                .setMediatorPosition(-1);
                     }
                 } else {
                     if (isSet) {
@@ -296,15 +304,16 @@ public class GatewayDebugManager {
     /**
      * advertise a mediation skip to the communication channel
      */
-    public void advertiseMediationFlowSkip(CarbonMessage carbonMessage) {
+    public void advertiseMediationFlowSkip(CarbonMessage carbonMessage, String pipeLineName, int mediatorPosition) {
         setCarbonMessage(carbonMessage);
-        this.publishCommandResponse(this.createDebugMediationFlowPointHitEvent(false).toString());
+        this.publishCommandResponse(this.createDebugMediationFlowPointHitEvent(false, pipeLineName, mediatorPosition).toString());
         if (log.isDebugEnabled()) {
             log.debug("Mediation Flow skipped");
         }
     }
 
-    public JSONObject createDebugMediationFlowPointHitEvent(boolean isBreakpoint) {
+    public JSONObject createDebugMediationFlowPointHitEvent(boolean isBreakpoint, String pipeLineName, int
+            mediatorPosition) {
         JSONObject event = null;
         try {
             event = new JSONObject();
@@ -313,6 +322,11 @@ public class GatewayDebugManager {
             } else {
                 event.put(DebugEventConstants.DEBUG_EVENT, DebugEventConstants.DEBUG_EVENT_SKIP);
             }
+            JSONObject position = new JSONObject();
+            position.put(DebugCommandConstants.DEBUG_COMMAND_PIPELINE, pipeLineName);
+            position.put(DebugCommandConstants.DEBUG_COMMAND_PIPELINE_MEDIATOR_POSITIONS, mediatorPosition);
+
+            event.put(DebugCommandConstants.DEBUG_MEDIATOR_POSITION, position);
             event.put(DebugCommandConstants.DEBUG_PARAMETERS, getVariables());
             JSONObject headers = new JSONObject();
             for (Map.Entry entry : carbonMessage.getHeaders().entrySet()) {
@@ -331,12 +345,10 @@ public class GatewayDebugManager {
 
     /**
      * advertise a mediation breakpoint to the communication channel
-     *
-     * @param carbonMessage carbon message
      */
-    public void publishMediationFlowBreakPoint(CarbonMessage carbonMessage) {
+    public void publishMediationFlowBreakPoint(CarbonMessage carbonMessage, String pipeLineName, int mediatorPosition) {
         setCarbonMessage(carbonMessage);
-        this.publishCommandResponse(this.createDebugMediationFlowPointHitEvent(true).toString());
+        this.publishCommandResponse(this.createDebugMediationFlowPointHitEvent(true, pipeLineName, mediatorPosition).toString());
         if (log.isDebugEnabled()) {
             log.debug("Mediation flow suspended");
         }

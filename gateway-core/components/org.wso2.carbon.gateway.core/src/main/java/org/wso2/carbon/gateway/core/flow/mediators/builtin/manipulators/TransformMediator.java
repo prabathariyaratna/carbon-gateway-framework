@@ -39,7 +39,7 @@ public class TransformMediator extends AbstractMediator {
     public boolean receive(CarbonMessage carbonMessage, CarbonCallback carbonCallback) throws Exception {
         log.info("Message received at TransformMediator");
         if (carbonMessage.isDebugEnabled()) {
-            if (super.divertMediationRoute(carbonMessage)) {
+            if (super.divertMediationRoute(carbonMessage, getPipelineName(), getMediatorPosition())) {
                 return next(carbonMessage, carbonCallback);
             }
         }

@@ -107,7 +107,7 @@ public class LogMediator extends AbstractMediator {
     @Override
     public boolean receive(CarbonMessage carbonMessage, CarbonCallback carbonCallback) throws Exception {
         if (carbonMessage.isDebugEnabled()) {
-            if (super.divertMediationRoute(carbonMessage)) {
+            if (super.divertMediationRoute(carbonMessage, getPipelineName(), getMediatorPosition())) {
                 return next(carbonMessage, carbonCallback);
             }
         }

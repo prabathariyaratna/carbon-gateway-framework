@@ -62,7 +62,7 @@ public class PropertyMediator extends AbstractMediator {
     public boolean receive(CarbonMessage carbonMessage, CarbonCallback carbonCallback) throws Exception {
 
         if (carbonMessage.isDebugEnabled()) {
-            if (super.divertMediationRoute(carbonMessage)) {
+            if (super.divertMediationRoute(carbonMessage, getPipelineName(), getMediatorPosition())) {
                 return next(carbonMessage, carbonCallback);
             }
         }

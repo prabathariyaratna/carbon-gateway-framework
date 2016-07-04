@@ -89,7 +89,7 @@ public class FilterMediator extends AbstractFlowController {
                throws Exception {
 
         if (carbonMessage.isDebugEnabled()) {
-            if (super.divertMediationRoute(carbonMessage)) {
+            if (super.divertMediationRoute(carbonMessage, getPipelineName(), getMediatorPosition())) {
                 return next(carbonMessage, carbonCallback);
             }
         }

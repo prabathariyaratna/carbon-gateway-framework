@@ -37,6 +37,8 @@ public abstract class AbstractMediator implements Mediator {
 
     boolean isBreakPoint;
     boolean isSkipPoint;
+    String pipelineName = null;
+    int mediatorPosition = -1;
     /* Pointer for the next sibling in the pipeline*/
     Mediator nextMediator = null;
 
@@ -138,14 +140,30 @@ public abstract class AbstractMediator implements Mediator {
         this.isBreakPoint = isBreakPoint;
     }
 
-    public boolean divertMediationRoute(CarbonMessage carbonMessage) {
+    public String getPipelineName() {
+        return pipelineName;
+    }
+
+    public void setPipelineName(String pipelineName) {
+        this.pipelineName = pipelineName;
+    }
+
+    public int getMediatorPosition() {
+        return mediatorPosition;
+    }
+
+    public void setMediatorPosition(int mediatorPosition) {
+        this.mediatorPosition = mediatorPosition;
+    }
+
+    public boolean divertMediationRoute(CarbonMessage carbonMessage, String pipeLineName, int mediatorPosition) {
         if (carbonMessage.getProperty(Constants.GATEWAY_DEBUG_MANAGER) != null) {
             GatewayDebugManager gatewayDebugManager = (GatewayDebugManager)carbonMessage.getProperty(Constants.GATEWAY_DEBUG_MANAGER);
             if (isSkipPoint()) {
-                gatewayDebugManager.advertiseMediationFlowSkip(carbonMessage);
+                gatewayDebugManager.advertiseMediationFlowSkip(carbonMessage, pipeLineName, mediatorPosition);
                 return true;
             } else if (isBreakPoint()) {
-                gatewayDebugManager.publishMediationFlowBreakPoint(carbonMessage);
+                gatewayDebugManager.publishMediationFlowBreakPoint(carbonMessage, pipeLineName, mediatorPosition);
             }
         }
         return false;

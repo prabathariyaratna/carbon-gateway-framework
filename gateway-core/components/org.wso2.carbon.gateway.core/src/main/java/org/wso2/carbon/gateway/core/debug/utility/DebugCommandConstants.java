@@ -37,6 +37,7 @@ public class DebugCommandConstants {
     public static final String DEBUG_PARAMETER = "parameter";
     public static final String DEBUG_PARAMETER_NAME = "parameter-name";
     public static final String DEBUG_PARAMETERS = "parameters";
+    public static final String DEBUG_MEDIATOR_POSITION = "mediator-position";
     public static final String DEBUG_HEADERS = "headers";
     public static final String DEBUG_BODY = "body";
     public static final String DEBUG_COMMAND_RESPONSE_UNABLE_TO_ACQUIRE_MESSAGE_PARAMETERS = "unable to " +
